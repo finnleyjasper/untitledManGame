@@ -110,6 +110,13 @@ public class GameMngr : MonoBehaviour
         }
     }
 
+    public void FlyEaten(Fly fly, Player player)
+    {
+        fly.gameObject.SetActive(false);
+
+        player.Score += fly.points;
+    }
+
     // coroutine code: https://forum.unity.com/threads/what-is-the-best-way-to-delay-a-function.1002040/
 
     void DoDelayAction(float delayTime)
