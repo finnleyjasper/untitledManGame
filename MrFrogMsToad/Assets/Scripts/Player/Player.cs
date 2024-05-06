@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public PlayerMovement movement { get; private set; }
+    [SerializeField] private Collider2D collider;
 
     public KeyCode up;
     public KeyCode down;
@@ -19,12 +21,14 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         this.movement = GetComponent<PlayerMovement>();
+        this.collider = GetComponent<Collider2D>();
     }
 
     private void Update()
     {
         ChangeDirection();
     }
+
 
     private void ChangeDirection()
     {
@@ -78,5 +82,8 @@ public class Player : MonoBehaviour
         }
     }
 
-
+    public static explicit operator Player(GameObject v)
+    {
+        throw new NotImplementedException();
+    }
 }
