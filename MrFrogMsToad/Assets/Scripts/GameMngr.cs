@@ -59,20 +59,9 @@ public class GameMngr : MonoBehaviour
 
         foreach (Player player in this.players)
         {
-            ResetPlayerState(player);
-            ResetPlayerStats(player);
+            player.Reset();
+            player.Respawn();
         }
-    }
-
-    private void ResetPlayerState(Player player) // resets a single player
-    {
-        player.gameObject.SetActive(true);
-    }
-
-    private void ResetPlayerStats(Player player)
-    {
-        player.Score = 0;
-        player.Lives = startingLives;
     }
 
     private void GameOver() // don't want to reset scores/lives as you want to show a 'game over' screen w/ results
@@ -91,45 +80,52 @@ public class GameMngr : MonoBehaviour
         _gameState = GameState.gameOver;
     }
 
-    public void PlayerEaten(Player winner, Player loser)
+    public void PlayerEaten(Player winner, Player loser) // not working becuase timer is not working; loser player turns on immediaelt again
     {
         // winner adds the bonus to their score, loser has 1 life removed
-        winner.Score += eatenBonus;
+        winner.IncreaseScore(eatenBonus);
 
-        loser.Lives -= 1;
-        loser.gameObject.SetActive(false);
+        loser.LoseLife();
 
         if (loser.Lives > 0)
         {
-            DoDelayAction(3.0f);
-            ResetPlayerState(loser);
+            DelayedRespawn(3.0f, loser);
+            
         }
         else
         {
             GameOver();
         }
+        //DEBUGGINGGGNGNGNG
+        Debug.Log(winner.name + " ate " + loser.name);
+        Debug.Log(loser.name + " has " + loser.Lives);
+        Debug.Log(winner.name + " has " + winner.Lives);
     }
 
-    public void FlyEaten(Fly fly) // should also take a player as a parameter, fetched from fly
+    public void FlyEaten(Fly fly, GameObject playerObj)
     {
         fly.gameObject.SetActive(false);
 
-        players[0].Score += fly.points; // temp hardcoded player ------- FIX!! -------
-        Debug.Log(players[0].Score); // REMOVE -- DEBUGGING
+        Player player = playerObj.GetComponent<Player>();
+
+        player.IncreaseScore(fly.points);
+        Debug.Log(player.Score); // REMOVE -- DEBUGGING
     }
 
     // coroutine code: https://forum.unity.com/threads/what-is-the-best-way-to-delay-a-function.1002040/
 
-    void DoDelayAction(float delayTime)
+    // DELAY RESPAWN
+    void DelayedRespawn(float delayTime, Player player)
     {
-        StartCoroutine(DelayAction(delayTime));
+        StartCoroutine(DelayAction(delayTime, player));
     }
 
-    IEnumerator DelayAction(float delayTime)
+    IEnumerator DelayAction(float delayTime, Player player)
     {
         //wait for the specified delay time before continuing.
-        yield return new WaitForSeconds(delayTime);
-
+        yield return new WaitForSeconds(delayTime);;
+        player.Respawn();
+        player.BeInvincible();
         //do the action after the delay time has finished.
     }
 }
