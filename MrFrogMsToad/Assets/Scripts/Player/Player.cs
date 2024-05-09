@@ -1,12 +1,12 @@
 /* 
 * filename: Player.cs
 * author: Finnley
-* description: 
+* description: the player class - takes input for movement script, stores score, lives, and manages "death"
 *
 * reference(s) - https://youtu.be/TKt_VlMn_aA
 *
 * created: 02 May 2024
-* last modified:  07 May 2024
+* last modified:  09 May 2024
 */
 
 /* Notes:
@@ -34,16 +34,17 @@ public class Player : MonoBehaviour
 
     private int _score;
     private int _lives;
+    private bool _isDead = false;
+    private Vector3 startingPosition;
 
     public int startingLives;
-    public Vector3 statingPosition;
 
-    private bool _hasPowerup = false;
-    private bool _isDead = false;
+    public string currentPowerup = "none";
 
     private void Awake()
     {
         _lives = startingLives;
+        startingPosition = gameObject.transform.position;
 
         this.movement = GetComponent<PlayerMovement>();
         this.collider = GetComponent<Collider2D>();
@@ -53,7 +54,6 @@ public class Player : MonoBehaviour
     private void Update()
     {
         ChangeDirection();
-        GetPowerup();
     }
 
     // MOVEMENT
@@ -92,34 +92,21 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // PLAYER EATEN
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Players") && _hasPowerup == true)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Players") && currentPowerup == "KillerPowerup")
         {
             Player player = collision.gameObject.GetComponent<Player>();
             FindObjectOfType<GameMngr>().PlayerEaten(this, player);
         }
     }
 
-    // TEMP CODE FOR CHECKING PVP WORKS
-    private void GetPowerup()
+    // VARIABLE UPDATING + CHECKING
+    public void IncreaseScore(int increse)
     {
-        if (Input.GetKeyDown(_powerupKey))
-        {
-            if(_hasPowerup)
-            {
-                _hasPowerup = false;
-            }
-            else
-            {
-                _hasPowerup = true;
-                Debug.Log(_hasPowerup);
-            }
-        }
+        _score += increse;
     }
 
     private void CheckCollider() // turns off/on collider depending on _isDead
     {
-        Collider2D collider = GetComponent<Collider2D>();
-
         if (_isDead)
         {
             collider.enabled = false;
@@ -130,53 +117,52 @@ public class Player : MonoBehaviour
         }
     }
 
-    // VARIABLE UPDATING
-    public void IncreaseScore(int increse)
+    public void LoseLife() // turns off this object, sets to dead
     {
-        _score += increse;
+        _lives -= 1;
+        this.gameObject.SetActive(false);
+        _isDead = true;
+        CheckCollider();
+    }
+
+    // STATES
+    public void Respawn()
+    {
+        movement.ResetState();
+        this.gameObject.SetActive(true);
+        _isDead = false;
+        this.transform.position = startingPosition;
+        BeInvincible();
+
     }
 
     public void Reset()
     {
+        this.gameObject.SetActive(true);
+        movement.ResetState();
+        this.transform.position = startingPosition;
         _score = 0;
         _lives = startingLives;
         _isDead = false;
         CheckCollider();
     }
 
-    public void Respawn()
-    {
-        this.gameObject.SetActive(true);
-        _isDead = false;
-        CheckCollider();
-        this.transform.position = statingPosition;
-    }
-
-
+    // COROUTINES
     public void BeInvincible()
     {
         // coroutine code: https://discussions.unity.com/t/toggling-a-sprite-renderer/135413/2
-        StartCoroutine("ToggleRenderer");
+        StartCoroutine("ToggleSpriteAndCollider");
     }
 
-    IEnumerator ToggleRenderer()
+    IEnumerator ToggleSpriteAndCollider() // sprite will flash, collider will turn back on after
     {
-        yield return new WaitForSeconds(0.5f);
-        this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
-        yield return new WaitForSeconds(0.5f);
-        this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
-        yield return new WaitForSeconds(0.5f);
-        this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
-        yield return new WaitForSeconds(0.5f);
-        this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
-    }
-
-    public void LoseLife() // turns off this object, sets to dead
-    {
-        _lives -= 1;
-        this.gameObject.SetActive(false);
-
-        _isDead = true;
+        for (int i = 0; i < 7; i++)
+        {
+            yield return new WaitForSeconds(0.3f);
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            yield return new WaitForSeconds(0.3f);
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        }
         CheckCollider();
     }
 

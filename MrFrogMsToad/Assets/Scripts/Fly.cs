@@ -6,7 +6,7 @@
 * reference(s) - https://youtu.be/TKt_VlMn_aA
 *
 * created: 05 May 2024
-* last modified:  07 May 2024
+* last modified:  09 May 2024
 */
 
 /* Notes:
@@ -19,20 +19,17 @@ using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
 
-public class Fly : MonoBehaviour
+public class Fly : EdibleObejct
 {
     public int points = 10;
 
-    private void Eat(GameObject player) 
+    protected override void Eat(Player player) 
     {
-        FindObjectOfType<GameMngr>().FlyEaten(this, player); 
-    }
+        FindObjectOfType<GameMngr>().FlyEaten(this, player);
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Players"))
-        {   
-                Eat(other.gameObject); 
+        if (!gameObject.active) // GameMngr will make a random fly active if none are, so ensures the method is only invoked if fly !active
+        {
+            Invoke("Respawn", 10f); // fly will reappear after 10 seconds
         } 
     }
 }

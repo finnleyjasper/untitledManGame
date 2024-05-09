@@ -4,15 +4,14 @@
 * description: GameManager manages invisable aspects of the game such as points, time, lives, etc.
 *
 * reference(s) - https://youtu.be/TKt_VlMn_aA
+*              - https://forum.unity.com/threads/what-is-the-best-way-to-delay-a-function.1002040/ (coroutine code)
 *
 * created: 02 May 2024
-* last modified:  02 May 2024
+* last modified:  09 May 2024
 */
 
 /* Notes:
  *  02/05: Must remember to turn off all powerups and fruits too in GameOver
- *  02/05: "ResetState" -- may need to include respawning player in spawn location?
- *  02/05: Double check the delay for death works correctly
  * 
  */
 
@@ -22,7 +21,6 @@ using UnityEngine;
 
 public class GameMngr : MonoBehaviour
 {
-    [SerializeField] int startingLives;
     [SerializeField] int eatenBonus;
 
     private enum GameState {playing, gameOver};
@@ -30,10 +28,6 @@ public class GameMngr : MonoBehaviour
 
     public Player[] players;
     public Transform flies;
-
-
-    //public int score { get; private set; } // means we can manually see it, but not set it; only actions in-game able to set the score/lives
-    //public int lives { get; private set; }
 
     private void Start()
     {
@@ -59,8 +53,7 @@ public class GameMngr : MonoBehaviour
 
         foreach (Player player in this.players)
         {
-            player.Reset();
-            player.Respawn();
+            player.Reset(); 
         }
     }
 
@@ -80,11 +73,10 @@ public class GameMngr : MonoBehaviour
         _gameState = GameState.gameOver;
     }
 
-    public void PlayerEaten(Player winner, Player loser) // not working becuase timer is not working; loser player turns on immediaelt again
+    public void PlayerEaten(Player winner, Player loser) 
     {
         // winner adds the bonus to their score, loser has 1 life removed
         winner.IncreaseScore(eatenBonus);
-
         loser.LoseLife();
 
         if (loser.Lives > 0)
@@ -96,23 +88,61 @@ public class GameMngr : MonoBehaviour
         {
             GameOver();
         }
-        //DEBUGGINGGGNGNGNG
-        Debug.Log(winner.name + " ate " + loser.name);
-        Debug.Log(loser.name + " has " + loser.Lives);
-        Debug.Log(winner.name + " has " + winner.Lives);
     }
 
-    public void FlyEaten(Fly fly, GameObject playerObj)
+    public void FlyEaten(Fly fly, Player player)
     {
         fly.gameObject.SetActive(false);
-
-        Player player = playerObj.GetComponent<Player>();
 
         player.IncreaseScore(fly.points);
         Debug.Log(player.Score); // REMOVE -- DEBUGGING
     }
 
-    // coroutine code: https://forum.unity.com/threads/what-is-the-best-way-to-delay-a-function.1002040/
+    public void PowerupEaten(EdibleObejct powerup, Player player) //doesnt need player but might add functionality later?
+    {
+        powerup.gameObject.SetActive(false);
+        IPowerup ipowerup = powerup.GetComponent<IPowerup>();
+        RemovePowerup(ipowerup, player);
+    }
+
+    // POWERUP MANAGEMENT
+    private void RemovePowerup(IPowerup powerup, Player player)
+    {
+        StartCoroutine(PowerupCountDown(powerup.Duration, player));
+    }
+
+    IEnumerator PowerupCountDown(float delayTime, Player player)
+    {
+        yield return new WaitForSeconds(delayTime);
+        player.currentPowerup = "none" ;
+    }
+
+    // vv methods for future to ensure all flies are on -- want to work on after tilemap/fly tiles are made
+
+    /* private void TurnOnMinimumFlies()
+    {
+        Debug.Log(CheckFlies());
+        if(!CheckFlies())
+        {
+            float flyToActivatef = Random.Range(0f, flies.Length);
+            int flyToActivatei = (int)flyToActivatef;
+            flies[flyToActivatei].Respawn();
+        }
+    }
+
+    private bool CheckFlies()
+    {
+        bool active = true;
+
+        foreach (Fly fly in flies)
+        {
+            if(!fly.gameObject.active)
+            {
+                active = false;
+            }
+        }
+        return active;
+    }*/
 
     // DELAY RESPAWN
     void DelayedRespawn(float delayTime, Player player)
@@ -125,7 +155,6 @@ public class GameMngr : MonoBehaviour
         //wait for the specified delay time before continuing.
         yield return new WaitForSeconds(delayTime);;
         player.Respawn();
-        player.BeInvincible();
         //do the action after the delay time has finished.
     }
 }
