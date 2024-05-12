@@ -28,6 +28,7 @@ public class GameMngr : MonoBehaviour
 
     public Player[] players;
     public Transform flies;
+    public GameObject gameOverScreen;
 
     private void Start()
     {
@@ -36,14 +37,18 @@ public class GameMngr : MonoBehaviour
 
     private void Update()
     {
-        if (Input.anyKeyDown && _gameState == GameState.gameOver)
+        if (_gameState == GameState.gameOver)
         {
-            NewGame();
+            if (Input.anyKeyDown)
+            {
+                NewGame();
+            }
         }
     }
 
     private void NewGame()
     {
+        gameOverScreen.SetActive(false);
         _gameState = GameState.playing;
 
         foreach (Transform fly in this.flies)
@@ -71,6 +76,7 @@ public class GameMngr : MonoBehaviour
         }
 
         _gameState = GameState.gameOver;
+        gameOverScreen.SetActive(true);
     }
 
     public void PlayerEaten(Player winner, Player loser) 
@@ -86,7 +92,7 @@ public class GameMngr : MonoBehaviour
         }
         else
         {
-            GameOver();
+            Invoke(nameof(GameOver), 0.25f);
         }
     }
 
