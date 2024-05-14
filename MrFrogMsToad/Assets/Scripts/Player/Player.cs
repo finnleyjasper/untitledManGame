@@ -1,3 +1,18 @@
+/* 
+* filename: Player.cs
+* author: Finnley
+* description: the player class - takes input for movement script, stores score, lives, and manages "death"
+*
+* reference(s) - https://youtu.be/TKt_VlMn_aA
+*
+* created: 02 May 2024
+* last modified:  09 May 2024
+*/
+
+/* Notes:
+ * 
+ */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,19 +24,31 @@ public class Player : MonoBehaviour
 {
     public PlayerMovement movement { get; private set; }
     [SerializeField] private Collider2D collider;
+    [SerializeField] private Rigidbody2D rb;
 
     public KeyCode up;
     public KeyCode down;
     public KeyCode left;
     public KeyCode right;
+    public KeyCode _powerupKey;
 
-    public int _score;
-    public int _lives;
+    private int _score;
+    private int _lives;
+    private bool _isDead = false;
+    private Vector3 startingPosition;
+
+    public int startingLives;
+
+    public string currentPowerup = "none";
 
     private void Awake()
     {
+        _lives = startingLives;
+        startingPosition = gameObject.transform.position;
+
         this.movement = GetComponent<PlayerMovement>();
         this.collider = GetComponent<Collider2D>();
+        this.rb = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
@@ -29,7 +56,7 @@ public class Player : MonoBehaviour
         ChangeDirection();
     }
 
-
+    // MOVEMENT
     private void ChangeDirection()
     {
         if (Input.GetKeyDown(up))
@@ -54,8 +81,89 @@ public class Player : MonoBehaviour
 
     private void ChangeOrientation()
     {
+        rb.freezeRotation = false; // this is on by default so player's dont get spun around when clipping objects
         float angle = Mathf.Atan2(this.movement.direction.y, this.movement.direction.x);
         this.transform.rotation = Quaternion.AngleAxis(angle * Mathf.Rad2Deg, Vector3.forward);
+        rb.freezeRotation = true;
+    }
+
+    // GAME EVENTS
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // PLAYER EATEN
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Players") && currentPowerup == "KillerPowerup")
+        {
+            Player player = collision.gameObject.GetComponent<Player>();
+            FindObjectOfType<GameMngr>().PlayerEaten(this, player);
+        }
+    }
+
+    // VARIABLE UPDATING + CHECKING
+    public void IncreaseScore(int increse)
+    {
+        _score += increse;
+    }
+
+    private void CheckCollider() // turns off/on collider depending on _isDead
+    {
+        if (_isDead)
+        {
+            collider.enabled = false;
+        }
+        else
+        {
+            collider.enabled = true;
+        }
+    }
+
+    public void LoseLife() // turns off this object, sets to dead
+    {
+        _lives -= 1;
+        this.gameObject.SetActive(false);
+        _isDead = true;
+        CheckCollider();
+    }
+
+    // STATES
+    public void Respawn()
+    {
+        movement.ResetState();
+        this.gameObject.SetActive(true);
+        _isDead = false;
+        this.transform.position = startingPosition;
+        BeInvincible();
+
+    }
+
+    public void Reset()
+    {
+        this.gameObject.SetActive(true);
+        movement.ResetState();
+        this.transform.position = startingPosition;
+        _score = 0;
+        _lives = startingLives;
+        _isDead = false;
+        CheckCollider();
+    }
+
+    // COROUTINES
+    public void BeInvincible()
+    {
+        // coroutine code: https://discussions.unity.com/t/toggling-a-sprite-renderer/135413/2
+        StartCoroutine("ToggleSpriteAndCollider");
+    }
+
+    IEnumerator ToggleSpriteAndCollider() // sprite will flash, collider will turn back on after
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            yield return new WaitForSeconds(0.3f);
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            yield return new WaitForSeconds(0.3f);
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        }
+        CheckCollider();
     }
 
     public int Score
@@ -64,10 +172,6 @@ public class Player : MonoBehaviour
         {
             return _score;
         }
-        set
-        {
-            _score = value;
-        }
     }
 
     public int Lives
@@ -75,10 +179,6 @@ public class Player : MonoBehaviour
         get
         {
             return _lives;
-        }
-        set
-        {
-            _lives = value;
         }
     }
 
