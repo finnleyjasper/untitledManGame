@@ -110,14 +110,6 @@ public class GameMngr : MonoBehaviour
         }
     }
 
-    public void FlyEaten(Fly fly) // should also take a player as a parameter, fetched from fly
-    {
-        fly.gameObject.SetActive(false);
-
-        players[0].Score += fly.points; // temp hardcoded player ------- FIX!! -------
-        Debug.Log(players[0].Score); // REMOVE -- DEBUGGING
-    }
-
     // coroutine code: https://forum.unity.com/threads/what-is-the-best-way-to-delay-a-function.1002040/
 
     void DoDelayAction(float delayTime)
