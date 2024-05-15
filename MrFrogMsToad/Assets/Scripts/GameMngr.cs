@@ -87,8 +87,7 @@ public class GameMngr : MonoBehaviour
 
         if (loser.Lives > 0)
         {
-            DelayedRespawn(3.0f, loser);
-            
+            DelayedRespawn(3.0f, loser);          
         }
         else
         {
@@ -104,24 +103,25 @@ public class GameMngr : MonoBehaviour
         Debug.Log(player.Score); // REMOVE -- DEBUGGING
     }
 
-    public void PowerupEaten(EdibleObejct powerup, Player player) //doesnt need player but might add functionality later?
-    {
-        powerup.gameObject.SetActive(false);
-        IPowerup ipowerup = powerup.GetComponent<IPowerup>();
-        RemovePowerup(ipowerup, player);
-    }
-
     // POWERUP MANAGEMENT
-    private void RemovePowerup(IPowerup powerup, Player player)
+
+    public void PowerupEaten(IPowerup powerup, Player player) //doesnt need player but might add functionality later?
     {
-        StartCoroutine(PowerupCountDown(powerup.Duration, player));
+        powerup.DoPowerup(player);
+        RemovePowerup(player);
     }
 
-    IEnumerator PowerupCountDown(float delayTime, Player player)
+    public void RemovePowerup(Player player) // begins the count down to remove the powerup
+    {
+        StartCoroutine(PowerupCountDown(player.currentPowerup.Duration, player));
+    }
+
+    IEnumerator PowerupCountDown(float delayTime, Player player) // revert changes from the powerup here
     {
         yield return new WaitForSeconds(delayTime);
-        player.currentPowerup = "none" ;
+        player.RemovePowerup();
     }
+
 
     // vv methods for future to ensure all flies are on -- want to work on after tilemap/fly tiles are made
 
@@ -150,6 +150,7 @@ public class GameMngr : MonoBehaviour
         return active;
     }*/
 
+
     // DELAY RESPAWN
     void DelayedRespawn(float delayTime, Player player)
     {
@@ -159,7 +160,7 @@ public class GameMngr : MonoBehaviour
     IEnumerator DelayAction(float delayTime, Player player)
     {
         //wait for the specified delay time before continuing.
-        yield return new WaitForSeconds(delayTime);;
+        yield return new WaitForSeconds(delayTime);
         player.Respawn();
         //do the action after the delay time has finished.
     }

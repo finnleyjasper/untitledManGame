@@ -30,16 +30,16 @@ public class Player : MonoBehaviour
     public KeyCode down;
     public KeyCode left;
     public KeyCode right;
-    public KeyCode _powerupKey;
 
     private int _score;
     private int _lives;
     private bool _isDead = false;
+    private bool _canKill = false;
     private Vector3 startingPosition;
 
     public int startingLives;
 
-    public string currentPowerup = "none";
+    public IPowerup currentPowerup;
 
     private void Awake()
     {
@@ -88,14 +88,22 @@ public class Player : MonoBehaviour
     }
 
     // GAME EVENTS
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // PLAYER EATEN
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Players") && currentPowerup == "KillerPowerup")
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Players") && _canKill)
         {
             Player player = collision.gameObject.GetComponent<Player>();
             FindObjectOfType<GameMngr>().PlayerEaten(this, player);
+        }
+    }
+
+    public void RemovePowerup()
+    {
+        if (currentPowerup !=null)
+        {
+            currentPowerup.RevertPowerup(this);
+            currentPowerup = null;
         }
     }
 
@@ -169,21 +177,18 @@ public class Player : MonoBehaviour
     public int Score
     {
         get
-        {
-            return _score;
-        }
+        { return _score; }
     }
 
     public int Lives
     {
         get
-        {
-            return _lives;
-        }
+        { return _lives; }
     }
 
-    public static explicit operator Player(GameObject v)
+    public bool CanKill
     {
-        throw new NotImplementedException();
+        get { return _canKill; }
+        set { _canKill = value; }
     }
 }
