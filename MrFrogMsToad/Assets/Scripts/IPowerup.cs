@@ -17,4 +17,11 @@ using UnityEngine;
 public interface IPowerup
 {
     [SerializeField] public float Duration { get; }
+
+    public bool Actioned { get; set; }
+
+    public void DoPowerup(Player player);
+
+    public void RevertPowerup(Player player);
+
 }

@@ -27,7 +27,7 @@ public class GameMngr : MonoBehaviour
     private GameState _gameState;
 
     public Player[] players;
-    public Transform flies;
+    public Transform pointObjects;
     public GameObject gameOverScreen;
 
     private void Start()
@@ -51,9 +51,9 @@ public class GameMngr : MonoBehaviour
         gameOverScreen.SetActive(false);
         _gameState = GameState.playing;
 
-        foreach (Transform fly in this.flies)
+        foreach (Transform point in this.pointObjects)
         {
-            fly.gameObject.SetActive(true); // putting all the flies back in the map
+            point.gameObject.SetActive(true); // putting all the flies back in the map
         }
 
         foreach (Player player in this.players)
@@ -65,9 +65,9 @@ public class GameMngr : MonoBehaviour
     private void GameOver() // don't want to reset scores/lives as you want to show a 'game over' screen w/ results
     {
         // turns off all flies and players
-        foreach (Transform fly in this.flies)
+        foreach (Transform basicEdible in this.pointObjects)
         {
-            fly.gameObject.SetActive(false);
+            basicEdible.gameObject.SetActive(false);
         }
 
         foreach (Player player in this.players)
@@ -87,8 +87,7 @@ public class GameMngr : MonoBehaviour
 
         if (loser.Lives > 0)
         {
-            DelayedRespawn(3.0f, loser);
-            
+            DelayedRespawn(3.0f, loser);          
         }
         else
         {
@@ -96,32 +95,33 @@ public class GameMngr : MonoBehaviour
         }
     }
 
-    public void FlyEaten(Fly fly, Player player)
+    public void PointEaten(PointObject point, Player player)
     {
-        fly.gameObject.SetActive(false);
+        point.gameObject.SetActive(false);
 
-        player.IncreaseScore(fly.points);
+        player.IncreaseScore(point.value);
         Debug.Log(player.Score); // REMOVE -- DEBUGGING
     }
 
-    public void PowerupEaten(EdibleObejct powerup, Player player) //doesnt need player but might add functionality later?
-    {
-        powerup.gameObject.SetActive(false);
-        IPowerup ipowerup = powerup.GetComponent<IPowerup>();
-        RemovePowerup(ipowerup, player);
-    }
-
     // POWERUP MANAGEMENT
-    private void RemovePowerup(IPowerup powerup, Player player)
+
+    public void PowerupEaten(IPowerup powerup, Player player) //doesnt need player but might add functionality later?
     {
-        StartCoroutine(PowerupCountDown(powerup.Duration, player));
+        powerup.DoPowerup(player);
+        RemovePowerup(player);
     }
 
-    IEnumerator PowerupCountDown(float delayTime, Player player)
+    public void RemovePowerup(Player player) // begins the count down to remove the powerup
+    {
+        StartCoroutine(PowerupCountDown(player.currentPowerup.Duration, player));
+    }
+
+    IEnumerator PowerupCountDown(float delayTime, Player player) // revert changes from the powerup here
     {
         yield return new WaitForSeconds(delayTime);
-        player.currentPowerup = "none" ;
+        player.RemovePowerup();
     }
+
 
     // vv methods for future to ensure all flies are on -- want to work on after tilemap/fly tiles are made
 
@@ -150,6 +150,7 @@ public class GameMngr : MonoBehaviour
         return active;
     }*/
 
+
     // DELAY RESPAWN
     void DelayedRespawn(float delayTime, Player player)
     {
@@ -159,7 +160,7 @@ public class GameMngr : MonoBehaviour
     IEnumerator DelayAction(float delayTime, Player player)
     {
         //wait for the specified delay time before continuing.
-        yield return new WaitForSeconds(delayTime);;
+        yield return new WaitForSeconds(delayTime);
         player.Respawn();
         //do the action after the delay time has finished.
     }

@@ -704,7 +704,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
       propertyPath: startingLives
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
       propertyPath: statingPosition.x
@@ -1511,7 +1511,7 @@ MonoBehaviour:
   players:
   - {fileID: 1513568599}
   - {fileID: 727163874}
-  flies: {fileID: 2029284912}
+  pointObjects: {fileID: 2029284912}
   gameOverScreen: {fileID: 539561536}
 --- !u!1 &990997476
 GameObject:
@@ -2620,6 +2620,14 @@ PrefabInstance:
     - target: {fileID: 5227609035499641599, guid: f63762b4da27246eba8488c88d7995fd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8783201593454927217, guid: f63762b4da27246eba8488c88d7995fd, type: 3}
+      propertyPath: duration
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8783201593454927217, guid: f63762b4da27246eba8488c88d7995fd, type: 3}
+      propertyPath: _duration
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
