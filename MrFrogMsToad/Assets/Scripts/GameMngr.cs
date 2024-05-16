@@ -27,7 +27,7 @@ public class GameMngr : MonoBehaviour
     private GameState _gameState;
 
     public Player[] players;
-    public Transform flies;
+    public Transform pointObjects;
     public GameObject gameOverScreen;
 
     private void Start()
@@ -51,9 +51,9 @@ public class GameMngr : MonoBehaviour
         gameOverScreen.SetActive(false);
         _gameState = GameState.playing;
 
-        foreach (Transform fly in this.flies)
+        foreach (Transform point in this.pointObjects)
         {
-            fly.gameObject.SetActive(true); // putting all the flies back in the map
+            point.gameObject.SetActive(true); // putting all the flies back in the map
         }
 
         foreach (Player player in this.players)
@@ -65,9 +65,9 @@ public class GameMngr : MonoBehaviour
     private void GameOver() // don't want to reset scores/lives as you want to show a 'game over' screen w/ results
     {
         // turns off all flies and players
-        foreach (Transform fly in this.flies)
+        foreach (Transform basicEdible in this.pointObjects)
         {
-            fly.gameObject.SetActive(false);
+            basicEdible.gameObject.SetActive(false);
         }
 
         foreach (Player player in this.players)
@@ -95,11 +95,11 @@ public class GameMngr : MonoBehaviour
         }
     }
 
-    public void FlyEaten(Fly fly, Player player)
+    public void PointEaten(PointObject point, Player player)
     {
-        fly.gameObject.SetActive(false);
+        point.gameObject.SetActive(false);
 
-        player.IncreaseScore(fly.points);
+        player.IncreaseScore(point.value);
         Debug.Log(player.Score); // REMOVE -- DEBUGGING
     }
 

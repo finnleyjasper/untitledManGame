@@ -19,17 +19,18 @@ using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
 
-public class Fly : EdibleObejct
+public class PointObject : EdibleObejct
 {
-    public int points = 10;
+    public int value = 10;
+    public float respawnTime = 10f;
 
     protected override void Eat(Player player) 
     {
-        FindObjectOfType<GameMngr>().FlyEaten(this, player);
+        FindObjectOfType<GameMngr>().PointEaten(this, player);
 
         if (!gameObject.active) // GameMngr will make a random fly active if none are, so ensures the method is only invoked if fly !active
         {
-            Invoke("Respawn", 10f); // fly will reappear after 10 seconds
+            Invoke("Respawn", respawnTime); // fly will reappear after 10 seconds
         } 
     }
 }
