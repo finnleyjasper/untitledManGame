@@ -195,7 +195,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      SpriteToad_0: -7490724917853760763
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

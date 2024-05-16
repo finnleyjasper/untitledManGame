@@ -195,7 +195,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      SpriteFrog 1_0: -3274847053324285636
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
