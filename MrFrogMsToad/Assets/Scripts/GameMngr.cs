@@ -23,12 +23,26 @@ public class GameMngr : MonoBehaviour
 {
     [SerializeField] int eatenBonus;
 
-    private enum GameState {playing, gameOver};
-    private GameState _gameState;
+    public enum GameState {playing, gameOver};
+    public GameState _gameState;
 
     public Player[] players;
     public Transform pointObjects;
+    public Transform bigPointObjects;
     public GameObject gameOverScreen;
+
+    private float _howOftenToSpawnBigPoints;
+    private float _lastTimeBigPointSpawned;
+
+    private void Awake()
+    {
+        int count = bigPointObjects.GetChildCount();
+        Transform bigPointTrans = bigPointObjects.GetChild(count-1);
+        Debug.Log(bigPointTrans.gameObject.name);
+        BigPointObject bigPoint = bigPointTrans.gameObject.GetComponent<BigPointObject>();
+        _howOftenToSpawnBigPoints = bigPoint.respawnTime;
+        _lastTimeBigPointSpawned = Time.fixedTime + _howOftenToSpawnBigPoints;
+    }
 
     private void Start()
     {
@@ -37,6 +51,11 @@ public class GameMngr : MonoBehaviour
 
     private void Update()
     {
+        if (_gameState == GameState.playing)
+        {
+            MangeBigPoints();
+        }
+
         if (_gameState == GameState.gameOver)
         {
             if (Input.anyKeyDown)
@@ -48,8 +67,10 @@ public class GameMngr : MonoBehaviour
 
     private void NewGame()
     {
-        gameOverScreen.SetActive(false);
+        // gameOverScreen.SetActive(false);
         _gameState = GameState.playing;
+
+        TurnOffAllBigPoints();
 
         foreach (Transform point in this.pointObjects)
         {
@@ -64,10 +85,9 @@ public class GameMngr : MonoBehaviour
 
     private void GameOver() // don't want to reset scores/lives as you want to show a 'game over' screen w/ results
     {
-        // turns off all flies and players
-        foreach (Transform basicEdible in this.pointObjects)
+        foreach (Transform points in this.pointObjects)
         {
-            basicEdible.gameObject.SetActive(false);
+            points.gameObject.SetActive(false);
         }
 
         foreach (Player player in this.players)
@@ -103,6 +123,7 @@ public class GameMngr : MonoBehaviour
         Debug.Log(player.Score); // REMOVE -- DEBUGGING
     }
 
+
     // POWERUP MANAGEMENT
 
     public void PowerupEaten(IPowerup powerup, Player player) //doesnt need player but might add functionality later?
@@ -122,34 +143,49 @@ public class GameMngr : MonoBehaviour
         player.RemovePowerup();
     }
 
+    // BIG PONT MANAGEMNT
 
-    // vv methods for future to ensure all flies are on -- want to work on after tilemap/fly tiles are made
-
-    /* private void TurnOnMinimumFlies()
+    private void TurnOffAllBigPoints()
     {
-        Debug.Log(CheckFlies());
-        if(!CheckFlies())
+        foreach (Transform bpo in this.bigPointObjects)
         {
-            float flyToActivatef = Random.Range(0f, flies.Length);
-            int flyToActivatei = (int)flyToActivatef;
-            flies[flyToActivatei].Respawn();
+            bpo.gameObject.SetActive(false);
         }
     }
 
-    private bool CheckFlies()
+    private void MangeBigPoints()
     {
-        bool active = true;
+        bool mustSpawn = false;
+        bool oneActive = false;
 
-        foreach (Fly fly in flies)
+        foreach (Transform bigPoint in bigPointObjects)
         {
-            if(!fly.gameObject.active)
+            // if one point is already active, OR none are active but not enough time has passed to spawn another
+            if (bigPoint.gameObject.active)
             {
-                active = false;
+                oneActive = true;
             }
         }
-        return active;
-    }*/
 
+        if (!oneActive && _lastTimeBigPointSpawned > (Time.fixedTime - _howOftenToSpawnBigPoints))
+        {
+            mustSpawn = true;
+        }
+
+        if (mustSpawn)
+        {
+            float randomNumber = Random.Range(1, bigPointObjects.childCount);
+
+            foreach (Transform bigPoint in bigPointObjects)
+            {
+                if (bigPoint.GetSiblingIndex() == randomNumber)
+                {
+                    bigPoint.gameObject.SetActive(true);
+                    _lastTimeBigPointSpawned = Time.fixedDeltaTime;
+                }
+            }
+        }
+    }
 
     // DELAY RESPAWN
     void DelayedRespawn(float delayTime, Player player)

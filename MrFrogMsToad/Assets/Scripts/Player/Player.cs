@@ -82,7 +82,7 @@ public class Player : MonoBehaviour
     private void ChangeOrientation()
     {
         rb.freezeRotation = false; // this is on by default so player's dont get spun around when clipping objects
-        float angle = Mathf.Atan2(this.movement.direction.y, this.movement.direction.x);
+        float angle = Mathf.Atan2(-this.movement.direction.x, this.movement.direction.y);
         this.transform.rotation = Quaternion.AngleAxis(angle * Mathf.Rad2Deg, Vector3.forward);
         rb.freezeRotation = true;
     }
