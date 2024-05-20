@@ -2,18 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BigPointObject : PointObject
+public class SpawnedObject : PointObject
 {
-    private void Awake()
-    {
-        respawnTime = 10; 
-        value = 10;
-    }
+    public float activeTime;
 
     protected override void Eat(Player player)
     {
         GameMngr gm = FindObjectOfType<GameMngr>();
         gm.PointEaten(this, player);
-    }
 
+    }
 }

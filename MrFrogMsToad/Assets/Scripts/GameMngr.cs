@@ -28,46 +28,36 @@ public class GameMngr : MonoBehaviour
 
     public Player[] players;
     public Transform pointObjects;
+
     public Transform bigPointObjects;
+    private float _bigPointObjectsTimeLastActive = 3f;
+
     public GameObject gameOverScreen;
-
-    private float _howOftenToSpawnBigPoints;
-    private float _lastTimeBigPointSpawned;
-
-    private void Awake()
-    {
-        int count = bigPointObjects.GetChildCount();
-        Transform bigPointTrans = bigPointObjects.GetChild(count-1);
-        Debug.Log(bigPointTrans.gameObject.name);
-        BigPointObject bigPoint = bigPointTrans.gameObject.GetComponent<BigPointObject>();
-        _howOftenToSpawnBigPoints = bigPoint.respawnTime;
-        _lastTimeBigPointSpawned = Time.fixedTime + _howOftenToSpawnBigPoints;
-    }
 
     private void Start()
     {
         NewGame();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (_gameState == GameState.playing)
         {
-            MangeBigPoints();
+            if (bigPointObjects.childCount > 0)
+            {
+                MangeSpawnedObject(bigPointObjects, _bigPointObjectsTimeLastActive);
+            }  
         }
 
-        if (_gameState == GameState.gameOver)
+        if (_gameState == GameState.gameOver && Input.GetKeyUp(KeyCode.Space))
         {
-            if (Input.anyKeyDown)
-            {
-                NewGame();
-            }
+            NewGame();
         }
     }
 
     private void NewGame()
     {
-        // gameOverScreen.SetActive(false);
+        gameOverScreen.SetActive(false);
         _gameState = GameState.playing;
 
         TurnOffAllBigPoints();
@@ -123,10 +113,15 @@ public class GameMngr : MonoBehaviour
         Debug.Log(player.Score); // REMOVE -- DEBUGGING
     }
 
+    // TELEPORTERS
+    public void MovePlayer(Player player, Vector2 endPosition)
+    {
+
+    }
 
     // POWERUP MANAGEMENT
 
-    public void PowerupEaten(IPowerup powerup, Player player) //doesnt need player but might add functionality later?
+    public void PowerupEaten(IPowerup powerup, Player player) 
     {
         powerup.DoPowerup(player);
         RemovePowerup(player);
@@ -143,7 +138,7 @@ public class GameMngr : MonoBehaviour
         player.RemovePowerup();
     }
 
-    // BIG PONT MANAGEMNT
+    // SPAWNED OBJ MANAGEMNT
 
     private void TurnOffAllBigPoints()
     {
@@ -153,41 +148,51 @@ public class GameMngr : MonoBehaviour
         }
     }
 
-    private void MangeBigPoints()
+    private void MangeSpawnedObject(Transform spawnedObjects, float timeLastActive)
     {
-        bool mustSpawn = false;
-        bool oneActive = false;
+        bool active = false;
 
-        foreach (Transform bigPoint in bigPointObjects)
+        foreach (Transform spObject in spawnedObjects)
         {
-            // if one point is already active, OR none are active but not enough time has passed to spawn another
-            if (bigPoint.gameObject.active)
+            if (spObject.gameObject.active)
             {
-                oneActive = true;
+                active = true;
             }
         }
 
-        if (!oneActive && _lastTimeBigPointSpawned > (Time.fixedTime - _howOftenToSpawnBigPoints))
-        {
-            mustSpawn = true;
-        }
+        Transform aSpawnedObjectChild = spawnedObjects.GetChild(0);
+        SpawnedObject aSpawnedObject = aSpawnedObjectChild.GetComponent<SpawnedObject>();
 
-        if (mustSpawn)
+        if (!active && Time.time > timeLastActive + aSpawnedObject.respawnTime + aSpawnedObject.activeTime)
         {
-            float randomNumber = Random.Range(1, bigPointObjects.childCount);
+            float randomNumber = Random.Range(1, spawnedObjects.childCount);
 
-            foreach (Transform bigPoint in bigPointObjects)
+            foreach (Transform spObject in spawnedObjects)
             {
-                if (bigPoint.GetSiblingIndex() == randomNumber)
+                if (spObject.GetSiblingIndex() == randomNumber)
                 {
-                    bigPoint.gameObject.SetActive(true);
-                    _lastTimeBigPointSpawned = Time.fixedDeltaTime;
+                    SpawnedObject chosenSpawnedObject = spObject.GetComponent<SpawnedObject>();
+                    chosenSpawnedObject.Respawn();
+                    DelayedPointDespawn(chosenSpawnedObject.activeTime, chosenSpawnedObject);
+                    timeLastActive = Time.time + chosenSpawnedObject.activeTime;                 
                 }
             }
         }
     }
 
-    // DELAY RESPAWN
+    // DELAY POINT/POWERUP RESPAWN
+    void DelayedPointDespawn(float delayTime, SpawnedObject spawnedObject)
+    {
+        StartCoroutine(DelayPointDespawn(delayTime, spawnedObject));
+    }
+
+    IEnumerator DelayPointDespawn(float delayTime, SpawnedObject spawnedObject)
+    {
+        yield return new WaitForSeconds(delayTime);
+        spawnedObject.gameObject.SetActive(false);
+    }
+
+    // DELAY PLAYER RESPAWN
     void DelayedRespawn(float delayTime, Player player)
     {
         StartCoroutine(DelayAction(delayTime, player));
@@ -200,6 +205,7 @@ public class GameMngr : MonoBehaviour
         player.Respawn();
         //do the action after the delay time has finished.
     }
+    
 }
 
     

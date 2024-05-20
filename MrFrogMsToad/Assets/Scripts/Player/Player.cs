@@ -62,21 +62,25 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(up))
         {
             this.movement.SetDirection(Vector2.up);
+            ChangeOrientation();
         }
         if (Input.GetKeyDown(down))
         {
             this.movement.SetDirection(Vector2.down);
+            ChangeOrientation();
         }
         if (Input.GetKeyDown(left))
         {
             this.movement.SetDirection(Vector2.left);
+            ChangeOrientation();
         }
         if (Input.GetKeyDown(right))
         {
             this.movement.SetDirection(Vector2.right);
+            ChangeOrientation();
         }
 
-        ChangeOrientation();
+       
     }
 
     private void ChangeOrientation()
