@@ -10,11 +10,6 @@
 * last modified:  09 May 2024
 */
 
-/* Notes:
- *  02/05: Must remember to turn off all powerups and fruits too in GameOver
- * 
- */
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +17,7 @@ using UnityEngine;
 public class GameMngr : MonoBehaviour
 {
     [SerializeField] int eatenBonus;
+    [SerializeField] int pointCapToWin;
 
     public enum GameState {playing, gameOver};
     public GameState _gameState;
@@ -30,16 +26,20 @@ public class GameMngr : MonoBehaviour
     public Transform pointObjects;
 
     public Transform bigPointObjects;
-    private float _bigPointObjectsTimeLastActive = 3f;
+    private float _bigPointObjectsTimeLastActive;
 
     public GameObject gameOverScreen;
+    public GameObject ui;
+
+    private Player _winner;
+    private Player _loser;
 
     private void Start()
     {
         NewGame();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (_gameState == GameState.playing)
         {
@@ -57,10 +57,15 @@ public class GameMngr : MonoBehaviour
 
     private void NewGame()
     {
+        _bigPointObjectsTimeLastActive = bigPointObjects.GetComponentInChildren<SpawnedObject>().respawnTime;
+        Debug.Log(_bigPointObjectsTimeLastActive.ToString());
+
         gameOverScreen.SetActive(false);
+        _winner = null;
+        _loser = null;
         _gameState = GameState.playing;
 
-        TurnOffAllBigPoints();
+        TurnOffAllSpawnableObjects(bigPointObjects);
 
         foreach (Transform point in this.pointObjects)
         {
@@ -71,6 +76,8 @@ public class GameMngr : MonoBehaviour
         {
             player.Reset(); 
         }
+
+        ui.SetActive(true); 
     }
 
     private void GameOver() // don't want to reset scores/lives as you want to show a 'game over' screen w/ results
@@ -84,9 +91,12 @@ public class GameMngr : MonoBehaviour
         {
             player.gameObject.SetActive(false);
         }
-
+        ui.SetActive(false);
         _gameState = GameState.gameOver;
         gameOverScreen.SetActive(true);
+        GameoverWinnerText gameOverUi = gameOverScreen.GetComponentInChildren<GameoverWinnerText>();
+        Debug.Log(_winner.name + _loser.name);
+        gameOverUi.UpdateWinner(_winner, _loser);
     }
 
     public void PlayerEaten(Player winner, Player loser) 
@@ -101,7 +111,9 @@ public class GameMngr : MonoBehaviour
         }
         else
         {
-            Invoke(nameof(GameOver), 0.25f);
+            _winner = winner;
+            _loser = loser;
+            GameOver();
         }
     }
 
@@ -111,12 +123,22 @@ public class GameMngr : MonoBehaviour
 
         player.IncreaseScore(point.value);
         Debug.Log(player.Score); // REMOVE -- DEBUGGING
-    }
 
-    // TELEPORTERS
-    public void MovePlayer(Player player, Vector2 endPosition)
-    {
+        if (player.Score >= pointCapToWin)
+        {
+            _winner = player;
+            Debug.Log(_winner.name);
 
+            foreach(Player p in players)
+            {
+                if (p != player)
+                {
+                    _loser = p;
+                }
+            }
+
+            GameOver();
+        }
     }
 
     // POWERUP MANAGEMENT
@@ -140,17 +162,18 @@ public class GameMngr : MonoBehaviour
 
     // SPAWNED OBJ MANAGEMNT
 
-    private void TurnOffAllBigPoints()
+    private void TurnOffAllSpawnableObjects(Transform spawnableObjs) // CHANGE TO BE FOR ALL POINT OBJS
     {
-        foreach (Transform bpo in this.bigPointObjects)
+        foreach (Transform spo in spawnableObjs)
         {
-            bpo.gameObject.SetActive(false);
+            spo.gameObject.SetActive(false);
         }
     }
 
     private void MangeSpawnedObject(Transform spawnedObjects, float timeLastActive)
     {
         bool active = false;
+
 
         foreach (Transform spObject in spawnedObjects)
         {
@@ -165,6 +188,10 @@ public class GameMngr : MonoBehaviour
 
         if (!active && Time.time > timeLastActive + aSpawnedObject.respawnTime + aSpawnedObject.activeTime)
         {
+            Debug.Log("Time last active: " + timeLastActive.ToString());
+            Debug.Log("Current Time: " + Time.time.ToString());
+
+
             float randomNumber = Random.Range(1, spawnedObjects.childCount);
 
             foreach (Transform spObject in spawnedObjects)
@@ -174,7 +201,9 @@ public class GameMngr : MonoBehaviour
                     SpawnedObject chosenSpawnedObject = spObject.GetComponent<SpawnedObject>();
                     chosenSpawnedObject.Respawn();
                     DelayedPointDespawn(chosenSpawnedObject.activeTime, chosenSpawnedObject);
-                    timeLastActive = Time.time + chosenSpawnedObject.activeTime;                 
+                    Debug.Log("Active time: " + chosenSpawnedObject.activeTime);
+                    timeLastActive = Time.time + chosenSpawnedObject.activeTime;
+                    Debug.Log("New timeLastActive: " + timeLastActive.ToString());
                 }
             }
         }

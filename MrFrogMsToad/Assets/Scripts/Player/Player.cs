@@ -156,6 +156,9 @@ public class Player : MonoBehaviour
         _score = 0;
         _lives = startingLives;
         _isDead = false;
+        _canKill = false;
+        currentPowerup = null;
+        movement.speedMultiplier = 1f;
         CheckCollider();
     }
 
