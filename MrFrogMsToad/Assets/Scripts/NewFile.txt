@@ -1,0 +1,74 @@
+﻿this is a paste bin for finn; kind of like a code grave yard. please ignore.
+============================================================================
+
+// randomised moth code in gamemanager?
+
+//////////////////////////////////////////////////////////////////////////////////
+
+    // POINT MANAGEMENET
+    public void SpawnBigPoint()
+    {
+        if (MustSpawnBigPoints())
+        {
+            GameObject pointToSpawn = FindBigPointToSpawn();
+
+            if (pointToSpawn != null)
+            {
+                pointToSpawn.SetActive(true);
+                BigPointObject bpoObject = GetComponent<BigPointObject>();
+                bpoObject.respawnTime = Time.fixedTime;
+            }
+        }
+    }
+
+    private GameObject FindBigPointToSpawn()
+    {
+        // weird randomness/int stuff to avoid putting things into an array
+        // because i am pretty sure that will break things
+
+        int bpoCount = 0;
+        GameObject bigPointToSpawn = null;
+
+        foreach (Transform bigPoint in bigPointObjects)
+        {
+            bpoCount += 1;
+        }
+
+        int randomNumber = Random.Range(1, bpoCount);
+        bpoCount = 1;
+
+        foreach (Transform bigPoint in bigPointObjects)
+        {
+            if (bpoCount == randomNumber)
+            {
+                bigPointToSpawn = bigPoint.gameObject;
+            }
+            bpoCount += 1;
+        }
+
+        return bigPointToSpawn;
+    }
+
+    private bool MustSpawnBigPoints()
+    {
+        foreach(Transform bigPoint in bigPointObjects)
+        {
+            if (bigPoint.gameObject.layer == LayerMask.NameToLayer("Moths"))
+            {
+                BigPointObject bigPointObject = GetComponent<BigPointObject>();
+
+                if (bigPoint.gameObject.active)
+                {
+                    return false;
+                }
+                else if (bigPointObject.timeSinceLastSpawned > (Time.fixedTime - bigPointObject.respawnTime))
+                {
+                    return true;
+                }
+            } 
+        }
+
+        return false;
+    }
+
+//////////////////////////////////////////////////////////////////////////////////

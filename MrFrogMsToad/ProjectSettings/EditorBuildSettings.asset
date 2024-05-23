@@ -5,8 +5,14 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/DEVScene.unity
+  - enabled: 0
+    path: Assets/Scenes/DELETEOldDEV.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Start.unity
+    guid: cd75350702d784350a5e1908acfc4eaf
+  - enabled: 1
+    path: Assets/Scenes/PlayScene.unity
+    guid: c0699b7e8d56141dd8fb926b268346d2
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

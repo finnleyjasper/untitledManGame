@@ -21,16 +21,17 @@ using UnityEngine;
 
 public class PointObject : EdibleObejct
 {
-    public int value = 10;
+    public int value = 1;
     public float respawnTime = 10f;
 
     protected override void Eat(Player player) 
     {
-        FindObjectOfType<GameMngr>().PointEaten(this, player);
+        GameMngr gm = FindObjectOfType<GameMngr>();
+        gm.PointEaten(this, player);
 
-        if (!gameObject.active) // GameMngr will make a random fly active if none are, so ensures the method is only invoked if fly !active
+        if (!gameObject.active && gm._gameState == GameMngr.GameState.playing) // GameMngr will make a random fly active if none are, so ensures the method is only invoked if fly !active
         {
-            Invoke("Respawn", respawnTime); // fly will reappear after 10 seconds
+            Invoke("Respawn", respawnTime); // fly will reappear after [respawnTime]
         } 
     }
 }

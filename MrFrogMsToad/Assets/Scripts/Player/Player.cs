@@ -62,27 +62,31 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(up))
         {
             this.movement.SetDirection(Vector2.up);
+            ChangeOrientation();
         }
         if (Input.GetKeyDown(down))
         {
             this.movement.SetDirection(Vector2.down);
+            ChangeOrientation();
         }
         if (Input.GetKeyDown(left))
         {
             this.movement.SetDirection(Vector2.left);
+            ChangeOrientation();
         }
         if (Input.GetKeyDown(right))
         {
             this.movement.SetDirection(Vector2.right);
+            ChangeOrientation();
         }
 
-        ChangeOrientation();
+       
     }
 
     private void ChangeOrientation()
     {
         rb.freezeRotation = false; // this is on by default so player's dont get spun around when clipping objects
-        float angle = Mathf.Atan2(this.movement.direction.y, this.movement.direction.x);
+        float angle = Mathf.Atan2(-this.movement.direction.x, this.movement.direction.y);
         this.transform.rotation = Quaternion.AngleAxis(angle * Mathf.Rad2Deg, Vector3.forward);
         rb.freezeRotation = true;
     }
@@ -152,6 +156,9 @@ public class Player : MonoBehaviour
         _score = 0;
         _lives = startingLives;
         _isDead = false;
+        _canKill = false;
+        currentPowerup = null;
+        movement.speedMultiplier = 1f;
         CheckCollider();
     }
 

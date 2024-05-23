@@ -31,14 +31,14 @@ public class KillerPowerup : EdibleObejct, IPowerup
 
     public void DoPowerup(Player player)
     {
-        player.movement.speed = (player.movement.speed * 150) / 100;
+        player.movement.speedMultiplier = 1.5f;
         player.CanKill = true;
         _actioned = true;
     }
 
     public void RevertPowerup(Player player)
     {
-        player.movement.speed = (player.movement.speed / 150) * 100;
+        player.movement.speedMultiplier = 1f;
         player.CanKill = false;
     }
 
