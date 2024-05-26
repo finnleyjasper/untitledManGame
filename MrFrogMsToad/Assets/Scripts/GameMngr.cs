@@ -57,9 +57,6 @@ public class GameMngr : MonoBehaviour
 
     private void NewGame()
     {
-        _bigPointObjectsTimeLastActive = bigPointObjects.GetComponentInChildren<SpawnedObject>().respawnTime;
-        Debug.Log(_bigPointObjectsTimeLastActive.ToString());
-
         gameOverScreen.SetActive(false);
         _winner = null;
         _loser = null;

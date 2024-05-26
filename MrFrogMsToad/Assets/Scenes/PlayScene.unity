@@ -3980,11 +3980,23 @@ PrefabInstance:
     - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
       propertyPath: collider
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2010292292}
+    - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
+      propertyPath: normalSprite
+      value: 
+      objectReference: {fileID: 6955348281508032260, guid: 16ff0c696b000425a951e26bc58649c6, type: 3}
+    - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
+      propertyPath: powerUpSprite
+      value: 
+      objectReference: {fileID: 8631139661165881797, guid: b46028e16e91d4c8381fa2e0219846d3, type: 3}
     - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
       propertyPath: startingLives
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
+      propertyPath: spriteRenderer
+      value: 
+      objectReference: {fileID: 2010292294}
     - target: {fileID: 5041346979377015201, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
       propertyPath: speed
       value: 5
@@ -4992,7 +5004,19 @@ PrefabInstance:
     - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
       propertyPath: collider
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2029996273}
+    - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
+      propertyPath: normalSprite
+      value: 
+      objectReference: {fileID: -7490724917853760763, guid: 11231361a37912e4594cadcfe9cfa17d, type: 3}
+    - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
+      propertyPath: powerUpSprite
+      value: 
+      objectReference: {fileID: -4812271765369448671, guid: 688711d3b2a1b4a31a4988605e91a877, type: 3}
+    - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
+      propertyPath: spriteRenderer
+      value: 
+      objectReference: {fileID: 2029996275}
     - target: {fileID: 5041346979377015201, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
       propertyPath: speed
       value: 5
@@ -9515,6 +9539,16 @@ Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 8828982519125284869, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
   m_PrefabInstance: {fileID: 480913502}
   m_PrefabAsset: {fileID: 0}
+--- !u!60 &2010292292 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 3317904248136360023, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
+  m_PrefabInstance: {fileID: 480913502}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &2010292294 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8867934851691710336, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
+  m_PrefabInstance: {fileID: 480913502}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2029996272 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
@@ -9526,6 +9560,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 384153c38e95d418492c29c3c856b835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!60 &2029996273 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 3317904248136360023, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
+  m_PrefabInstance: {fileID: 612095413}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &2029996275 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8867934851691710336, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
+  m_PrefabInstance: {fileID: 612095413}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2085470481
 GameObject:
   m_ObjectHideFlags: 0
@@ -9556,7 +9600,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eatenBonus: 20
-  pointCapToWin: 10
+  pointCapToWin: 75
   _gameState: 0
   players:
   - {fileID: 2010292290}

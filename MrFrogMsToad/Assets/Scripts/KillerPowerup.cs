@@ -33,6 +33,7 @@ public class KillerPowerup : EdibleObejct, IPowerup
     {
         player.movement.speedMultiplier = 1.5f;
         player.CanKill = true;
+        player.spriteRenderer.sprite = player.powerUpSprite;
         _actioned = true;
     }
 
@@ -40,6 +41,7 @@ public class KillerPowerup : EdibleObejct, IPowerup
     {
         player.movement.speedMultiplier = 1f;
         player.CanKill = false;
+        player.spriteRenderer.sprite = player.normalSprite;
     }
 
     public float Duration
