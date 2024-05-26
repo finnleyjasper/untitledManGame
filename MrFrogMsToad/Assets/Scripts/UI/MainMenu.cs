@@ -10,7 +10,7 @@ public class MainMenu : MonoBehaviour
 
     public void PlayGame()
     {
-        ShowIntroScreen();
+        Invoke("ShowIntroScreen", 0.5f);
     }
 
     public void QuitGame()
