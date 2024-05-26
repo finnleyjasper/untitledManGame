@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6cfd863f16991458eb5f1dfa596300ee
+guid: 68edc40166dd3004c8ece9d77c087952
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4639931127911993204
-    second: tempFrog_0
+      213: -4812271765369448671
+    second: SpriteToadPower_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -84,19 +84,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -113,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tempFrog_0
+      name: SpriteToadPower_0
       rect:
         serializedVersion: 2
-        x: 30
-        y: 0
-        width: 1025
-        height: 858
+        x: 19
+        y: 39
+        width: 282
+        height: 262
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -127,8 +114,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c80378af837ab9fb0800000000000000
-      internalID: -4639931127911993204
+      spriteID: 127138e6350673db0800000000000000
+      internalID: -4812271765369448671
       vertices: []
       indices: 
       edges: []
@@ -143,8 +130,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      tempFrog_0: -4639931127911993204
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -215,7 +215,11 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      mrFrog&msToadTitle_0: -2601680329083937170
+      mrFrog&msToadTitle_1: -7076594970644674720
+      mrFrog&msToadTitle_2: 666008927145547849
+      mrFrog&msToadTitle_3: -5923537211746817329
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
