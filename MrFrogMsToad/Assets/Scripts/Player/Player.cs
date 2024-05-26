@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     public PlayerMovement movement { get; private set; }
     [SerializeField] private Collider2D collider;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] public SpriteRenderer spriteRenderer;
 
     public KeyCode up;
     public KeyCode down;
@@ -37,7 +38,11 @@ public class Player : MonoBehaviour
     private bool _canKill = false;
     private Vector3 startingPosition;
 
+
     public int startingLives;
+
+    public Sprite normalSprite;
+    public Sprite powerUpSprite;
 
     public IPowerup currentPowerup;
 
@@ -46,9 +51,10 @@ public class Player : MonoBehaviour
         _lives = startingLives;
         startingPosition = gameObject.transform.position;
 
-        this.movement = GetComponent<PlayerMovement>();
-        this.collider = GetComponent<Collider2D>();
-        this.rb = GetComponent<Rigidbody2D>();
+        movement = GetComponent<PlayerMovement>();
+        collider = GetComponent<Collider2D>();
+        rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
