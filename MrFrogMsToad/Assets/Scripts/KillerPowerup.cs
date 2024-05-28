@@ -6,18 +6,14 @@
 * reference(s) - https://youtu.be/TKt_VlMn_aA
 *
 * created: 09 May 2024
-* last modified:  09 May 2024
+* last modified:  22 May 2024
 */
-
-/* Notes:
- * 
- */
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KillerPowerup : EdibleObejct, IPowerup
+public class KillerPowerup : SpawnedObject, IPowerup
 {
     [SerializeField] private float _duration;
     private bool _actioned = false;

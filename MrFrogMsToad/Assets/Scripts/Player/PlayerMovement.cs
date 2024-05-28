@@ -9,10 +9,6 @@
 * last modified:  02 May 2024
 */
 
-/* Notes:
- * 
- */
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

@@ -1,17 +1,13 @@
 /* 
 * filename: EdibleObject.cs
 * author: Finnley
-* description: a parent obj for powerups, flies, etc. - anything that should be able to get "eaten" by the players. reduces code duplication.
+* description: a parent obj for powerups, flies, etc. - anything that should be able to get "eaten" by the players.
 *
 * reference(s) - https://youtu.be/TKt_VlMn_aA
 *
 * created: 09 May 2024
-* last modified:  09 May 2024
+* last modified: 19 May 2024
 */
-
-/* Notes:
- * 
- */
 
 using System.Collections;
 using System.Collections.Generic;
