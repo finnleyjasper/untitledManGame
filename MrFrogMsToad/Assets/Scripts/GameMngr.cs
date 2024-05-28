@@ -1,13 +1,15 @@
 /*
 * filename: GameManagerScript.cs
 * author: Finnley
-* description: GameManager manages invisable aspects of the game such as points, time, lives, etc.
+* description: GameManager manages invisable aspects of the game such as points, time, lives, game phase, screens to show etc.
+* 
+*              game controls such as the points needed to win or the bonus for eating another player is set here
 *
 * reference(s) - https://youtu.be/TKt_VlMn_aA
 *              - https://forum.unity.com/threads/what-is-the-best-way-to-delay-a-function.1002040/ (coroutine code)
 *
 * created: 02 May 2024
-* last modified:  09 May 2024
+* last modified:  28 May 2024
 */
 
 using System.Collections;
@@ -26,13 +28,17 @@ public class GameMngr : MonoBehaviour
     public Transform pointObjects;
 
     public Transform bigPointObjects;
-    private float _bigPointObjectsTimeLastActive;
+    private float _bigPointObjectsTimeLastActive = 0;
+
+    public Transform killerPowerups;
+    private float _killerPowerupTimeLastActive = 0;
 
     public GameObject gameOverScreen;
     public GameObject ui;
 
     private Player _winner;
     private Player _loser;
+    private string _reasonForGameOver; 
 
     private void Start()
     {
@@ -45,8 +51,19 @@ public class GameMngr : MonoBehaviour
         {
             if (bigPointObjects.childCount > 0)
             {
-                MangeSpawnedObject(bigPointObjects, _bigPointObjectsTimeLastActive);
-            }  
+                if (SpawnNewObject(bigPointObjects, _bigPointObjectsTimeLastActive))
+                {
+                    _bigPointObjectsTimeLastActive = Time.time;
+                }
+            }
+
+            if (killerPowerups.childCount > 0)
+            {
+                if (SpawnNewObject(killerPowerups, _killerPowerupTimeLastActive))
+                {
+                    _killerPowerupTimeLastActive = Time.time;
+                }
+            }
         }
 
         if (_gameState == GameState.gameOver && Input.GetKeyUp(KeyCode.Space))
@@ -61,8 +78,11 @@ public class GameMngr : MonoBehaviour
         _winner = null;
         _loser = null;
         _gameState = GameState.playing;
+        _killerPowerupTimeLastActive = Time.time;
+        _bigPointObjectsTimeLastActive = Time.time;
 
         TurnOffAllSpawnableObjects(bigPointObjects);
+        TurnOffAllSpawnableObjects(killerPowerups);
 
         foreach (Transform point in this.pointObjects)
         {
@@ -92,8 +112,7 @@ public class GameMngr : MonoBehaviour
         _gameState = GameState.gameOver;
         gameOverScreen.SetActive(true);
         GameoverWinnerText gameOverUi = gameOverScreen.GetComponentInChildren<GameoverWinnerText>();
-        Debug.Log(_winner.name + _loser.name);
-        gameOverUi.UpdateWinner(_winner, _loser);
+        gameOverUi.UpdateText(_winner, _loser, _reasonForGameOver);
     }
 
     public void PlayerEaten(Player winner, Player loser) 
@@ -104,12 +123,13 @@ public class GameMngr : MonoBehaviour
 
         if (loser.Lives > 0)
         {
-            DelayedRespawn(3.0f, loser);          
+            DelayedRespawn(3.0f, loser);
         }
         else
         {
             _winner = winner;
             _loser = loser;
+            _reasonForGameOver = _winner.name + " has eaten " + _loser.name + " 3 times!";
             GameOver();
         }
     }
@@ -119,12 +139,10 @@ public class GameMngr : MonoBehaviour
         point.gameObject.SetActive(false);
 
         player.IncreaseScore(point.value);
-        Debug.Log(player.Score); // REMOVE -- DEBUGGING
 
         if (player.Score >= pointCapToWin)
         {
             _winner = player;
-            Debug.Log(_winner.name);
 
             foreach(Player p in players)
             {
@@ -134,6 +152,7 @@ public class GameMngr : MonoBehaviour
                 }
             }
 
+            _reasonForGameOver = _winner.name + " has eaten 75 points before " + _loser.name + "!";
             GameOver();
         }
     }
@@ -159,7 +178,7 @@ public class GameMngr : MonoBehaviour
 
     // SPAWNED OBJ MANAGEMNT
 
-    private void TurnOffAllSpawnableObjects(Transform spawnableObjs) // CHANGE TO BE FOR ALL POINT OBJS
+    private void TurnOffAllSpawnableObjects(Transform spawnableObjs)
     {
         foreach (Transform spo in spawnableObjs)
         {
@@ -167,43 +186,40 @@ public class GameMngr : MonoBehaviour
         }
     }
 
-    private void MangeSpawnedObject(Transform spawnedObjects, float timeLastActive)
+    private bool SpawnNewObject(Transform objects, float timeLastActive)
     {
         bool active = false;
+        bool hasSpawned = false;
 
-
-        foreach (Transform spObject in spawnedObjects)
+        foreach (Transform spawnedObject in objects)
         {
-            if (spObject.gameObject.active)
+            if (spawnedObject.gameObject.active)
             {
                 active = true;
             }
         }
 
-        Transform aSpawnedObjectChild = spawnedObjects.GetChild(0);
-        SpawnedObject aSpawnedObject = aSpawnedObjectChild.GetComponent<SpawnedObject>();
-
-        if (!active && Time.time > timeLastActive + aSpawnedObject.respawnTime + aSpawnedObject.activeTime)
+        if (!active)
         {
-            Debug.Log("Time last active: " + timeLastActive.ToString());
-            Debug.Log("Current Time: " + Time.time.ToString());
+            float randomNumber = Random.Range(0, objects.childCount);
 
-
-            float randomNumber = Random.Range(1, spawnedObjects.childCount);
-
-            foreach (Transform spObject in spawnedObjects)
+            foreach (Transform spawnedObject in objects)
             {
-                if (spObject.GetSiblingIndex() == randomNumber)
+                if (spawnedObject.GetSiblingIndex() == randomNumber)
                 {
-                    SpawnedObject chosenSpawnedObject = spObject.GetComponent<SpawnedObject>();
-                    chosenSpawnedObject.Respawn();
-                    DelayedPointDespawn(chosenSpawnedObject.activeTime, chosenSpawnedObject);
-                    Debug.Log("Active time: " + chosenSpawnedObject.activeTime);
-                    timeLastActive = Time.time + chosenSpawnedObject.activeTime;
-                    Debug.Log("New timeLastActive: " + timeLastActive.ToString());
+                    SpawnedObject chosenSP = spawnedObject.GetComponent<SpawnedObject>();
+
+                   if (Time.time > timeLastActive + chosenSP.activeTime + chosenSP.respawnTime)
+                    {
+                        hasSpawned = true;
+                        chosenSP.Respawn();
+                        DelayedPointDespawn(chosenSP.activeTime, chosenSP);
+                    }
                 }
             }
         }
+
+        return hasSpawned;
     }
 
     // DELAY POINT/POWERUP RESPAWN

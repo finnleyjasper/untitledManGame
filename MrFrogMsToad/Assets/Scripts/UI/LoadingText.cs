@@ -1,3 +1,12 @@
+/* 
+* filename: LoadingText.cs
+* author: Finnley
+* description: animates the loading "...." beneath the "loading" screen
+*
+* created: 20 May 2024
+* last modified:  20 May 2024
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

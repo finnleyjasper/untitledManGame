@@ -4,14 +4,11 @@
 * description: the player class - takes input for movement script, stores score, lives, and manages "death"
 *
 * reference(s) - https://youtu.be/TKt_VlMn_aA
+*              - https://discussions.unity.com/t/toggling-a-sprite-renderer/135413/2
 *
 * created: 02 May 2024
-* last modified:  09 May 2024
+* last modified:  28 May 2024
 */
-
-/* Notes:
- * 
- */
 
 using System;
 using System.Collections;
@@ -40,6 +37,7 @@ public class Player : MonoBehaviour
 
 
     public int startingLives;
+    public bool isInvincible = false;
 
     public Sprite normalSprite;
     public Sprite powerUpSprite;
@@ -104,7 +102,10 @@ public class Player : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Players") && _canKill)
         {
             Player player = collision.gameObject.GetComponent<Player>();
-            FindObjectOfType<GameMngr>().PlayerEaten(this, player);
+            if (!player.isInvincible)
+            {
+                FindObjectOfType<GameMngr>().PlayerEaten(this, player);
+            }
         }
     }
 
@@ -150,6 +151,7 @@ public class Player : MonoBehaviour
         this.gameObject.SetActive(true);
         _isDead = false;
         this.transform.position = startingPosition;
+        CheckCollider();
         BeInvincible();
 
     }
@@ -159,11 +161,19 @@ public class Player : MonoBehaviour
         this.gameObject.SetActive(true);
         movement.ResetState();
         this.transform.position = startingPosition;
+
         _score = 0;
         _lives = startingLives;
         _isDead = false;
         _canKill = false;
-        currentPowerup = null;
+        isInvincible = false;
+
+        if (currentPowerup != null)
+        {
+            currentPowerup.RevertPowerup(this);
+            currentPowerup = null;
+        }
+
         movement.speedMultiplier = 1f;
         CheckCollider();
     }
@@ -171,6 +181,8 @@ public class Player : MonoBehaviour
     // COROUTINES
     public void BeInvincible()
     {
+        isInvincible = true;
+
         // coroutine code: https://discussions.unity.com/t/toggling-a-sprite-renderer/135413/2
         StartCoroutine("ToggleSpriteAndCollider");
     }
@@ -184,7 +196,7 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
             this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
         }
-        CheckCollider();
+        isInvincible = false;
     }
 
     public int Score

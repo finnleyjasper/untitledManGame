@@ -100,7 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04252666673664071b16681481f6e93b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _duration: 20
+  value: 0
+  respawnTime: 15
+  activeTime: 8
+  _duration: 10
 --- !u!61 &6301588784983507482
 BoxCollider2D:
   m_ObjectHideFlags: 0

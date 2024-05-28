@@ -9,10 +9,6 @@
 * last modified:  16 May 2024
 */
 
-/* Notes:
- * 
- */
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,10 +20,6 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private Text _scoreText;
     [SerializeField] private Text _livesText;
 
-    private void Start()
-    {
-       
-    }
 
     public void UpdateScoreUI(Player player)
     {
