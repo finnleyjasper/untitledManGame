@@ -15,6 +15,13 @@ using UnityEngine;
 
 public class EdibleObejct : MonoBehaviour
 {
+    public AudioClip[] audiosounds;
+    private AudioSource audiosource;
+
+    private void Awake()
+    {
+        audiosource = GetComponent<AudioSource>();
+    }
     protected virtual void Eat(Player player)
     {
         // put what will happen when this obj is eaten here
@@ -29,8 +36,11 @@ public class EdibleObejct : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Players"))
         {
+            
             Player player = other.GetComponent<Player>();
             Eat(player);
+            audiosource.clip = audiosounds[Random.Range(0, audiosounds.Length)];
+            audiosource.PlayOneShot(audiosource.clip);
         }
     }
 }

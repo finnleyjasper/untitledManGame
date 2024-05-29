@@ -100,6 +100,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5e5c1993977d4a159fce73a8d98bf90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audiosounds:
+  - {fileID: 8300000, guid: af7cabb53ddc87a48b6bd71dc4445340, type: 3}
+  - {fileID: 8300000, guid: 22cc3b8c9c821ba4c910dd75110f2b06, type: 3}
+  - {fileID: 8300000, guid: 995b159771faa8f4693e5ba01b9d413b, type: 3}
+  - {fileID: 8300000, guid: 110f05b1333bc484997ed456b9a994a4, type: 3}
   value: 1
   respawnTime: 15
 --- !u!61 &2258133313808371934
