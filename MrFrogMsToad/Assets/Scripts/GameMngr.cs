@@ -124,16 +124,23 @@ public class GameMngr : MonoBehaviour
         winner.IncreaseScore(eatenBonus);
         loser.LoseLife();
 
-        if (loser.Lives > 0)
-        {
-            DelayedRespawn(3.0f, loser);
-        }
-        else
+        if (loser.Lives <= 0)
         {
             _winner = winner;
             _loser = loser;
             _reasonForGameOver = _winner.name + " has eaten " + _loser.name + " 3 times!";
             GameOver();
+        }
+        else if (winner.Score >= pointCapToWin)
+        {
+            _winner = winner;
+            _loser = loser;
+            _reasonForGameOver = _winner.name + " has eaten " + pointCapToWin + " points before " + _loser.name + "!";
+            GameOver();
+        }
+        else
+        {
+            DelayedRespawn(3.0f, loser);
         }
     }
 
@@ -155,7 +162,7 @@ public class GameMngr : MonoBehaviour
                 }
             }
 
-            _reasonForGameOver = _winner.name + " has eaten 75 points before " + _loser.name + "!";
+            _reasonForGameOver = _winner.name + " has eaten " + pointCapToWin + " points before " + _loser.name + "!";
             GameOver();
         }
     }

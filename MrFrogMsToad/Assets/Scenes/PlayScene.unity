@@ -611,7 +611,7 @@ MonoBehaviour:
   - {fileID: 2010292290}
   - {fileID: 2029996272}
   powerupClip: {fileID: 8300000, guid: 92b1db25e769a1043a3353226af750a8, type: 3}
-  gameClip: {fileID: 8300000, guid: baeaddcd6eb4d7544bf7144ad4e1ce68, type: 3}
+  gameClip: {fileID: 8300000, guid: 36825b58a4887443e83b596bca4fe0ea, type: 3}
   gameOverClip: {fileID: 8300000, guid: 914f5a2ed028eb8448d9f282a52d1d9a, type: 3}
   musicAudioSource: {fileID: 131394087}
   sfxAudioSource: {fileID: 131394088}
@@ -640,8 +640,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: baeaddcd6eb4d7544bf7144ad4e1ce68, type: 3}
-  m_Resource: {fileID: 8300000, guid: baeaddcd6eb4d7544bf7144ad4e1ce68, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 36825b58a4887443e83b596bca4fe0ea, type: 3}
+  m_Resource: {fileID: 8300000, guid: 36825b58a4887443e83b596bca4fe0ea, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -1675,6 +1675,10 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
+      propertyPath: diedSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 0c2dbe0aef8e446c3aaf1363fe0abb16, type: 3}
+    - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
       propertyPath: collider
       value: 
       objectReference: {fileID: 2010292292}
@@ -2698,6 +2702,10 @@ PrefabInstance:
       propertyPath: right
       value: 275
       objectReference: {fileID: 0}
+    - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
+      propertyPath: diedSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 0c2dbe0aef8e446c3aaf1363fe0abb16, type: 3}
     - target: {fileID: 4708758525190739233, guid: 5b22c66cae22e48f88cdbb78caa189f2, type: 3}
       propertyPath: collider
       value: 
@@ -5985,8 +5993,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: b51e29129275d44689a23fa43b569903, type: 3}
-  m_Resource: {fileID: 8300000, guid: b51e29129275d44689a23fa43b569903, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 0c2dbe0aef8e446c3aaf1363fe0abb16, type: 3}
+  m_Resource: {fileID: 8300000, guid: 0c2dbe0aef8e446c3aaf1363fe0abb16, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -7453,6 +7461,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button
       objectReference: {fileID: 0}
+    - target: {fileID: 5877626842809116304, guid: 3f49871422cc342d5820fad9f888a938, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 0c2dbe0aef8e446c3aaf1363fe0abb16, type: 3}
+    - target: {fileID: 5877626842809116304, guid: 3f49871422cc342d5820fad9f888a938, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 0c2dbe0aef8e446c3aaf1363fe0abb16, type: 3}
     - target: {fileID: 9033570075881953774, guid: 3f49871422cc342d5820fad9f888a938, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

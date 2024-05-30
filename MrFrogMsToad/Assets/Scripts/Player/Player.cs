@@ -160,6 +160,11 @@ public class Player : MonoBehaviour
 
     public void Reset()
     {
+        // there was a bug where occasionally when the game ended while the coroutine was toggling the sprites, that player
+        // would start a new game invisible, so stopping the coroutine and toggling the sprite renderer on fixes this
+        StopCoroutine(ToggleSpriteAndCollider());
+        spriteRenderer.enabled = true;
+
         this.gameObject.SetActive(true);
         movement.ResetState();
         this.transform.position = startingPosition;
