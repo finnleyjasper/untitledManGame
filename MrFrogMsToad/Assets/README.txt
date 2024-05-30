@@ -1,4 +1,4 @@
-﻿=== TEAM NAME: Phillips Head
+=== TEAM NAME: Phillips Head
 
 === MEMBERS:
         - Finnley Newnham: Programming
@@ -16,12 +16,12 @@
          - Google Drive was used to share image files when appropriate (ie. for our pitch document)
          - Trello was used for task management and tracking
          - Jira was initially used to set up a visual timeline
-         - Google Docs was used to prepare our pitch documnent
+         - Google Docs was used to prepare our pitch document
          - Indesign was used to format the pitch document
 
 === RESOURCES:
         - Unity docs: https://docs.unity3d.com/2023.2/Documentation/Manual/index.html
-            -> Finnley visited this a lot when using components or functions he was not familar with
+            -> Finnley visited this a lot when using components or functions he was not familiar with
 
         - MOST USED - For all mechanics similar to Pacman: https://youtu.be/TKt_VlMn_aA
             -> Finnley based Player, PlayerMovement, PointObject, Teleporter, and some of GameManager off of this video - pretty much anything covered in the video
@@ -49,6 +49,10 @@
 
 === ASSETS:
         - Some code is referenced from the above Pacman video (second link, marked "MOST USED"), as well as the coroutine resources
-        - Background music from: https://stock.adobe.com/au/search/audio?k=452590948 & https://stock.adobe.com/au/search/audio?k=452592185
-        - All other assets are our own
 
+        - Music from: 
+		- https://stock.adobe.com/au/search/audio?k=452594475
+		- https://stock.adobe.com/au/search/audio?k=452592185
+		- https://stock.adobe.com/au/search/audio?k=452590948
+
+        - All other assets are our own
