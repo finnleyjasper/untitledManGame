@@ -32,7 +32,7 @@ public class MainMenu : MonoBehaviour
     public void ShowIntroScreen()
     {
         introScreen.SetActive(true);
-        StartCoroutine(PauseBeforeStartGame(20));
+        StartCoroutine(PauseBeforeStartGame(15));
     }
 
     IEnumerator PauseBeforeStartGame(float delayTime)
