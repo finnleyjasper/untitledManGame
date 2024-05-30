@@ -36,11 +36,11 @@ public class EdibleObejct : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Players"))
         {
-            
+            SoundManager sm = FindObjectOfType<SoundManager>();
+            sm.PlaySFX(audiosounds[Random.Range(0, audiosounds.Length)]);
+
             Player player = other.GetComponent<Player>();
             Eat(player);
-            audiosource.clip = audiosounds[Random.Range(0, audiosounds.Length)];
-            audiosource.PlayOneShot(audiosource.clip);
         }
     }
 }
