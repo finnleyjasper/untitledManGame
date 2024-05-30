@@ -131,11 +131,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collider: {fileID: 3317904248136360023}
   rb: {fileID: 8828982519125284869}
+  spriteRenderer: {fileID: 0}
   up: 0
   down: 0
   left: 0
   right: 0
   startingLives: 3
+  isInvincible: 0
+  normalSprite: {fileID: 0}
+  powerUpSprite: {fileID: 0}
+  diedSFX: {fileID: 8300000, guid: b51e29129275d44689a23fa43b569903, type: 3}
 --- !u!114 &5041346979377015201
 MonoBehaviour:
   m_ObjectHideFlags: 0

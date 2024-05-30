@@ -22,7 +22,7 @@ public class GameMngr : MonoBehaviour
     [SerializeField] int pointCapToWin;
 
     public enum GameState {playing, gameOver};
-    public GameState _gameState;
+    public GameState gameState;
 
     public Player[] players;
     public Transform pointObjects;
@@ -31,14 +31,14 @@ public class GameMngr : MonoBehaviour
     private float _bigPointObjectsTimeLastActive = 0;
 
     public Transform killerPowerups;
-    private float _killerPowerupTimeLastActive = 0;
+    private float _killerPowerupTimeLastActive = -5;
 
     public GameObject gameOverScreen;
     public GameObject ui;
 
     private Player _winner;
     private Player _loser;
-    private string _reasonForGameOver; 
+    private string _reasonForGameOver;
 
     private void Start()
     {
@@ -47,7 +47,7 @@ public class GameMngr : MonoBehaviour
 
     private void Update()
     {
-        if (_gameState == GameState.playing)
+        if (gameState == GameState.playing)
         {
             if (bigPointObjects.childCount > 0)
             {
@@ -66,7 +66,7 @@ public class GameMngr : MonoBehaviour
             }
         }
 
-        if (_gameState == GameState.gameOver && Input.GetKeyUp(KeyCode.Space))
+        if (gameState == GameState.gameOver && Input.GetKeyUp(KeyCode.Space))
         {
             NewGame();
         }
@@ -77,7 +77,7 @@ public class GameMngr : MonoBehaviour
         gameOverScreen.SetActive(false);
         _winner = null;
         _loser = null;
-        _gameState = GameState.playing;
+        gameState = GameState.playing;
         _killerPowerupTimeLastActive = Time.time;
         _bigPointObjectsTimeLastActive = Time.time;
 
@@ -109,7 +109,7 @@ public class GameMngr : MonoBehaviour
             player.gameObject.SetActive(false);
         }
         ui.SetActive(false);
-        _gameState = GameState.gameOver;
+        gameState = GameState.gameOver;
         gameOverScreen.SetActive(true);
         GameoverWinnerText gameOverUi = gameOverScreen.GetComponentInChildren<GameoverWinnerText>();
         gameOverUi.UpdateText(_winner, _loser, _reasonForGameOver);
@@ -117,6 +117,9 @@ public class GameMngr : MonoBehaviour
 
     public void PlayerEaten(Player winner, Player loser) 
     {
+        SoundManager sm = FindObjectOfType<SoundManager>();
+        sm.PlaySFX(loser.diedSFX);
+
         // winner adds the bonus to their score, loser has 1 life removed
         winner.IncreaseScore(eatenBonus);
         loser.LoseLife();

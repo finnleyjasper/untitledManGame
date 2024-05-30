@@ -44,6 +44,8 @@ public class Player : MonoBehaviour
 
     public IPowerup currentPowerup;
 
+    public AudioClip diedSFX;
+
     private void Awake()
     {
         _lives = startingLives;
